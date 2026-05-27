@@ -1,0 +1,6 @@
+{
+  "name": "Portal Web Madrasah Ibtidaiyah",
+  "description": "Portal web pendidikan Madrasah Ibtidaiyah (MI) dengan menu dinamis, editor konten interaktif, dan panel admin terintegrasi.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

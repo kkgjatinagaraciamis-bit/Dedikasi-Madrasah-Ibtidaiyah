@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Menu": {
+      "title": "Menu",
+      "description": "A navigation menu and content section for teacher administration",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the menu, hyphenated"
+        },
+        "title": {
+          "type": "string",
+          "description": "The title or display name for the button"
+        },
+        "icon": {
+          "type": "string",
+          "description": "The Lucide-react icon name"
+        },
+        "content": {
+          "type": "string",
+          "description": "The custom HTML or naskah content"
+        },
+        "reloadUrl": {
+          "type": "string",
+          "description": "Optional direct frame URL / Google Drive embed"
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Whether the menu is visible to teachers"
+        },
+        "order": {
+          "type": "number",
+          "description": "Sort order placement of the menu"
+        }
+      },
+      "required": ["id", "title", "icon", "isActive", "order"]
+    }
+  },
+  "firestore": {
+    "/menus/{menuId}": {
+      "schema": "Menu",
+      "description": "Collection of custom curriculum and administration menus"
+    }
+  }
+}
