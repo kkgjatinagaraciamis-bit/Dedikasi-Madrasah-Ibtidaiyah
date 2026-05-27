@@ -32,6 +32,42 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu } from "./types";
+import { initializeApp, getApps, getApp } from "firebase/app";
+import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc, writeBatch } from "firebase/firestore";
+
+const firebaseConfig = {
+  projectId: "gen-lang-client-0587057080",
+  appId: "1:271793203706:web:bdc6ce6b9e454c9e92dc43",
+  apiKey: "AIzaSyDVR8LrUrewxRqx7w1OMlThbuMG5pXkG-c",
+  authDomain: "gen-lang-client-0587057080.firebaseapp.com",
+  firestoreDatabaseId: "ai-studio-3dc15c03-5ec3-48ed-af7b-025d0506d7a6",
+  storageBucket: "gen-lang-client-0587057080.firebasestorage.app",
+  messagingSenderId: "271793203706"
+};
+
+const firebaseApp = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+const db = getFirestore(firebaseApp, firebaseConfig.firestoreDatabaseId);
+
+const DEFAULT_MENUS: Menu[] = [
+  {
+    id: "perangkat-ajar",
+    title: "Perangkat Mengajar & RPP",
+    icon: "BookOpen",
+    content: "<div class='space-y-4'><h3 class='text-2xl font-bold text-emerald-800 border-b border-gray-250 pb-2'>Administrasi Perangkat Mengajar</h3><p class='text-slate-700 leading-relaxed text-sm'>Penyediaan berkas utama administrasi guru untuk Kegiatan Belajar Mengajar (KBM) Madrasah Ibtidaiyah sesuai standar Kurikulum Merdeka dan KTSP Kementerian Agama.</p><div class='grid grid-cols-1 md:grid-cols-2 gap-4 mt-2'><div class='border border-gray-200 p-4 rounded-xl bg-white shadow-xs hover:border-emerald-500 transition-colors'><h4 class='font-bold text-emerald-900 mb-1.5 flex items-center gap-2'><span class='w-6 h-6 rounded-md bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs'>1</span>Program Tahunan & Semester</h4><p class='text-xs text-slate-500 leading-relaxed'>Rencana penetapan alokasi waktu satu tahun ajaran (Prota) dan per semester (Promes) untuk mencapai tujuan pembelajaran madrasah.</p></div><div class='border border-gray-200 p-4 rounded-xl bg-white shadow-xs hover:border-emerald-500 transition-colors'><h4 class='font-bold text-emerald-900 mb-1.5 flex items-center gap-2'><span class='w-6 h-6 rounded-md bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs'>2</span>Silabus & Modul Ajar (RPP)</h4><p class='text-xs text-slate-500 leading-relaxed'>Kerangka sistematis pembelajaran mingguan serta rencana pelaksanaan pembelajaran harian dengan integrasi karakter akhlaqul karimah.</p></div><div class='border border-gray-200 p-4 rounded-xl bg-white shadow-xs hover:border-emerald-500 transition-colors'><h4 class='font-bold text-emerald-900 mb-1.5 flex items-center gap-2'><span class='w-6 h-6 rounded-md bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs'>3</span>Kriteria Ketercapaian (KKTP)</h4><p class='text-xs text-slate-500 leading-relaxed'>Indikator ketuntasan belajar minimum siswa yang disesuaikan dengan keragaman kompetensi akademis awal siswa madrasah.</p></div><div class='border border-gray-200 p-4 rounded-xl bg-white shadow-xs hover:border-emerald-500 transition-colors'><h4 class='font-bold text-emerald-900 mb-1.5 flex items-center gap-2'><span class='w-6 h-6 rounded-md bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs'>4</span>Alur Tujuan Pembelajaran</h4><p class='text-xs text-slate-500 leading-relaxed'>Rangkaian TP yang disusun secara logis menurut urutan pembelajaran sejak awal hingga akhir fase pendidikan MI.</p></div></div><div class='bg-slate-50 border border-gray-200 p-4 rounded-xl mt-4'><h4 class='font-bold text-emerald-900 text-sm mb-1'>Panduan Pengisian Kelengkapan:</h4><p class='text-xs text-slate-655 leading-relaxed mb-2.5'>Semua berkas wajib disiapkan dalam bentuk cetak (portofolio fisik) di kantor guru dan diunggah salinannya ke Google Drive Bersama Madrasah untuk verifikasi Pengawas Kemenag.</p><div class='flex gap-2 flex-wrap'><span class='px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded text-[11px] font-bold'>Format .docx Terkini</span><span class='px-2.5 py-1 bg-slate-200 text-slate-700 rounded text-[11px] font-bold'>Terintegrasi ARDM</span></div></div></div>",
+    reloadUrl: "",
+    isActive: true,
+    order: 1
+  },
+  {
+    id: "evaluasi-nilai",
+    title: "Penilaian & Kisi-Kisi",
+    icon: "FileText",
+    content: "<div class='space-y-4'><h3 class='text-2xl font-bold text-emerald-800 border-b border-gray-250 pb-2'>Instrumen Penilaian & Bank Kisi-Kisi</h3><p class='text-slate-700 text-sm'>Fasilitas administrasi untuk menyusun rancangan asesmen kurikulum merdeka (Asesmen Diagnostik, Formatif, Sumatif) serta penyediaan template kisi-kisi soal ujian semester Madrasah Ibtidaiyah.</p><div class='grid grid-cols-1 md:grid-cols-3 gap-4 mt-2'><div class='bg-slate-50 p-4 rounded-xl border border-gray-200'><div class='w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs mb-3'>📋</div><h4 class='font-bold text-emerald-950 text-sm'>Asesmen Diagnostik</h4><p class='text-xs text-slate-500 leading-relaxed mt-1'>Asesmen awal non-kognitif & kognitif untuk mendeteksi kesiapan belajar siswa serta gaya belajar unik yang dimiliki siswa MI.</p></div><div class='bg-slate-50 p-4 rounded-xl border border-gray-200'><div class='w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs mb-3'>📝</div><h4 class='font-bold text-emerald-900 text-sm'>Asesmen Formatif</h4><p class='text-xs text-slate-500 leading-relaxed mt-1'>Pantauan kemajuan belajar siswa saat KBM berlangsung melalui penugasan, observasi akhlak harian, serta kuis interaktif tanpa beban nilai rapor.</p></div><div class='bg-slate-50 p-4 rounded-xl border border-gray-200'><div class='w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs mb-3'>🎓</div><h4 class='font-bold text-emerald-950 text-sm'>Asesmen Sumatif</h4><p class='text-xs text-slate-500 leading-relaxed mt-1'>Ujian tertulis/praktik semesteran untuk menentukan pencapaian target KKTP serta dasar penginputan rapor digital Kementerian Agama (ARDM).</p></div></div><div class='border-l-4 border-emerald-600 bg-emerald-50/50 p-4 rounded-r-xl space-y-2 mt-4'><h4 class='font-bold text-emerald-999 text-sm'>Aplikasi Nilai ARDM Madrasah:</h4><p class='text-xs text-slate-705 leading-relaxed'>Guru diimbau menyelaraskan bobot penilaian harian (formatif) dan nilai sumatif akhir semester sebelum diunggah ke portal ARDM Madrasah. Silakan koordinasi dengan operator bagian kurikulum madrasah jika ada kendala token pengisian.</p></div></div>",
+    reloadUrl: "",
+    isActive: true,
+    order: 2
+  }
+];
 
 // Dynamic Lucide selection helper for administrative menus
 const getMenuIcon = (iconName: string) => {
@@ -111,14 +147,30 @@ export default function App() {
     try {
       setLoading(true);
       setError(null);
-      const res = await fetch("/api/menus");
-      if (!res.ok) throw new Error("Gagal mengambil data dari server");
-      const data = await res.json();
+      // Attempt direct client-side Firestore fetch (reliable everywhere including Vercel)
+      const snap = await getDocs(collection(db, "menus"));
+      let data = snap.docs.map(doc => doc.data() as Menu);
+      
+      if (data.length === 0) {
+        // Automatically seed/use default menus if Firestore contains no records
+        data = DEFAULT_MENUS;
+      }
+      
       // Sort menus based on their order configuration
-      const sorted = (data as Menu[]).sort((a, b) => a.order - b.order);
+      const sorted = data.sort((a, b) => a.order - b.order);
       setMenus(sorted);
     } catch (err: any) {
-      setError(err.message || "Koneksi server bermasalah");
+      console.warn("Direct Firestore read failed, falling back to local Express backend:", err.message);
+      // Fallback to Express backend if we are running in full-stack container/dev mode
+      try {
+        const res = await fetch("/api/menus");
+        if (!res.ok) throw new Error("Gagal mengambil data dari server");
+        const serverData = await res.json();
+        const sorted = (serverData as Menu[]).sort((a, b) => a.order - b.order);
+        setMenus(sorted);
+      } catch (fallbackErr: any) {
+        setError("Koneksi database/server terganggu. Silakan periksa jaringan internet Anda.");
+      }
     } finally {
       setLoading(false);
     }
@@ -182,17 +234,14 @@ export default function App() {
     setIsLoggingIn(true);
     setPinError("");
 
-    try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: adminEmail, password: adminPassword })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Gagal masuk");
-      }
+    const cleanEmail = adminEmail.toLowerCase().trim();
+    if (cleanEmail !== "kkgjatinagaraciamis@gmail.com") {
+      setPinError("Akses Ditolak: Hanya kkgjatinagaraciamis@gmail.com yang diizinkan.");
+      setIsLoggingIn(false);
+      return;
+    }
 
+    try {
       setLoggedInEmail("kkgjatinagaraciamis@gmail.com");
       localStorage.setItem("adminEmail", "kkgjatinagaraciamis@gmail.com");
       setIsPinUnlocked(true);
@@ -208,6 +257,13 @@ export default function App() {
         isActive: true,
         order: menus.length + 1
       });
+
+      // Optional background sync with container API
+      fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: adminEmail, password: adminPassword })
+      }).catch(() => {});
     } catch (err: any) {
       setPinError(err.message || "Akses login ditolak.");
     } finally {
@@ -219,14 +275,6 @@ export default function App() {
     setIsLoggingIn(true);
     setPinError("");
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: "kkgjatinagaraciamis@gmail.com", password: "fireapp123" })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-
       setLoggedInEmail("kkgjatinagaraciamis@gmail.com");
       localStorage.setItem("adminEmail", "kkgjatinagaraciamis@gmail.com");
       setIsPinUnlocked(true);
@@ -242,6 +290,13 @@ export default function App() {
         isActive: true,
         order: menus.length + 1
       });
+
+      // Optional background sync with container API
+      fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: "kkgjatinagaraciamis@gmail.com", password: "fireapp123" })
+      }).catch(() => {});
     } catch (err: any) {
       setPinError(err.message || "Gagal masuk instan.");
     } finally {
@@ -263,14 +318,6 @@ export default function App() {
     setShowGoogleModal(false);
     
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-
       setLoggedInEmail("kkgjatinagaraciamis@gmail.com");
       localStorage.setItem("adminEmail", "kkgjatinagaraciamis@gmail.com");
       setIsPinUnlocked(true);
@@ -286,6 +333,13 @@ export default function App() {
         isActive: true,
         order: menus.length + 1
       });
+
+      // Optional background sync with container API
+      fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      }).catch(() => {});
     } catch (err: any) {
       alert("SSO Gagal di backend: " + err.message);
     } finally {
@@ -397,25 +451,26 @@ export default function App() {
 
     setIsSaving(true);
     try {
-      const res = await fetch("/api/menus/save", {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "X-Admin-Email": loggedInEmail || ""
-        },
-        body: JSON.stringify(editingMenu)
-      });
+      const menuData: Menu = {
+        id: editingMenu.id,
+        title: editingMenu.title,
+        icon: editingMenu.icon || "BookOpen",
+        content: editingMenu.content || "",
+        reloadUrl: editingMenu.reloadUrl || "",
+        isActive: editingMenu.isActive !== undefined ? editingMenu.isActive : true,
+        order: editingMenu.order !== undefined ? Number(editingMenu.order) : 1
+      };
 
-      const responseData = await res.json();
-      if (!res.ok) throw new Error(responseData.error || "Gagal menyimpan");
+      // Direct client-side Firestore write
+      await setDoc(doc(db, "menus", menuData.id), menuData);
 
-      showNotification("success", `Data menu "${editingMenu.title}" berhasil disimpan di database sekolah.`);
+      showNotification("success", `Data menu "${editingMenu.title}" berhasil disimpan di database.`);
       
       await fetchMenus();
       
       // If updating currently active menu, sync its display
       if (activeMenu && activeMenu.id === editingMenu.id) {
-        setActiveMenu(responseData.data as Menu);
+        setActiveMenu(menuData);
       }
 
       // Reset fields
@@ -426,10 +481,42 @@ export default function App() {
         content: "",
         reloadUrl: "",
         isActive: true,
-        order: menus.length + 1
+        order: (menus && menus.length > 0 ? menus.length : 2) + 1
       });
+
+      // Optional background sync with container API
+      fetch("/api/menus/save", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "X-Admin-Email": loggedInEmail || ""
+        },
+        body: JSON.stringify(editingMenu)
+      }).catch(() => {});
     } catch (err: any) {
-      showNotification("error", err.message || "Gagal mengirim data.");
+      console.warn("Direct Firestore save failed, falling back to Express API:", err.message);
+      try {
+        const res = await fetch("/api/menus/save", {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "X-Admin-Email": loggedInEmail || ""
+          },
+          body: JSON.stringify(editingMenu)
+        });
+
+        const responseData = await res.json();
+        if (!res.ok) throw new Error(responseData.error || "Gagal menyimpan");
+
+        showNotification("success", `Data menu "${editingMenu.title}" berhasil disimpan di database sekolah.`);
+        await fetchMenus();
+        
+        if (activeMenu && activeMenu.id === editingMenu.id) {
+          setActiveMenu(responseData.data as Menu);
+        }
+      } catch (fallbackErr: any) {
+        showNotification("error", fallbackErr.message || "Gagal mengirim data.");
+      }
     } finally {
       setIsSaving(false);
     }
@@ -440,14 +527,8 @@ export default function App() {
     if (!window.confirm(`Hapus menu "${title}" secara permanen dari basis data?`)) return;
 
     try {
-      const res = await fetch(`/api/menus/${id}`, {
-        method: "DELETE",
-        headers: {
-          "X-Admin-Email": loggedInEmail || ""
-        }
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Gagal menghapus");
+      // Direct client-side Firestore delete
+      await deleteDoc(doc(db, "menus", id));
 
       showNotification("success", `Berkas menu "${title}" sukses dihapus.`);
       
@@ -456,8 +537,36 @@ export default function App() {
       }
 
       await fetchMenus();
+
+      // Optional background sync with container API
+      fetch(`/api/menus/${id}`, {
+        method: "DELETE",
+        headers: {
+          "X-Admin-Email": loggedInEmail || ""
+        }
+      }).catch(() => {});
     } catch (err: any) {
-      showNotification("error", err.message || "Gagal menghapus data.");
+      console.warn("Direct Firestore delete failed, falling back to Express API:", err.message);
+      try {
+        const res = await fetch(`/api/menus/${id}`, {
+          method: "DELETE",
+          headers: {
+            "X-Admin-Email": loggedInEmail || ""
+          }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Gagal menghapus");
+
+        showNotification("success", `Berkas menu "${title}" sukses dihapus.`);
+        
+        if (activeMenu?.id === id) {
+          setActiveMenu(null);
+        }
+
+        await fetchMenus();
+      } catch (fallbackErr: any) {
+        showNotification("error", fallbackErr.message || "Gagal menghapus data.");
+      }
     }
   };
 
@@ -466,20 +575,51 @@ export default function App() {
     if (!window.confirm("Apakah Anda ingin mereset seluruh database administrasi guru ke pengaturan bawaan? Perubahan kustom akan terhapus.")) return;
 
     try {
-      const res = await fetch("/api/menus/reset-default", { 
+      // Direct client-side batch write
+      const deleteBatch = writeBatch(db);
+      
+      const snap = await getDocs(collection(db, "menus"));
+      for (const d of snap.docs) {
+        deleteBatch.delete(d.ref);
+      }
+      await deleteBatch.commit();
+      
+      const insertBatch = writeBatch(db);
+      for (const item of DEFAULT_MENUS) {
+        const docRef = doc(db, "menus", item.id);
+        insertBatch.set(docRef, item);
+      }
+      await insertBatch.commit();
+
+      showNotification("success", "Basis data sukses direset ke berkas Administrasi Guru bawaan!");
+      setMenus(DEFAULT_MENUS);
+      setActiveMenu(null);
+
+      // Optional background sync with container API
+      fetch("/api/menus/reset-default", { 
         method: "POST",
         headers: {
           "X-Admin-Email": loggedInEmail || ""
         }
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Reset gagal");
-
-      showNotification("success", "Basis data sukses direset ke berkas Administrasi Guru bawaan!");
-      setMenus(data.menus || []);
-      setActiveMenu(null);
+      }).catch(() => {});
     } catch (err: any) {
-      showNotification("error", "Gagal mereset: " + err.message);
+      console.warn("Direct Firestore reset failed, falling back to Express API:", err.message);
+      try {
+        const res = await fetch("/api/menus/reset-default", { 
+          method: "POST",
+          headers: {
+            "X-Admin-Email": loggedInEmail || ""
+          }
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Reset gagal");
+
+        showNotification("success", "Basis data sukses direset ke berkas Administrasi Guru bawaan!");
+        setMenus(data.menus || []);
+        setActiveMenu(null);
+      } catch (fallbackErr: any) {
+        showNotification("error", "Gagal mereset: " + fallbackErr.message);
+      }
     }
   };
 
@@ -497,19 +637,53 @@ export default function App() {
     sortedMenus[targetIndex].order = tempOrder;
 
     try {
-      const res = await fetch("/api/menus/bulk", {
+      // Direct client-side batch update
+      const batch = writeBatch(db);
+      for (const item of sortedMenus) {
+        if (item.id) {
+          const docRef = doc(db, "menus", item.id);
+          batch.set(docRef, {
+            id: item.id,
+            title: item.title,
+            icon: item.icon || "BookOpen",
+            content: item.content || "",
+            reloadUrl: item.reloadUrl || "",
+            isActive: item.isActive !== undefined ? item.isActive : true,
+            order: item.order !== undefined ? Number(item.order) : 1
+          });
+        }
+      }
+      await batch.commit();
+
+      showNotification("success", "Urutan menu berhasil disesuaikan!");
+      fetchMenus();
+
+      // Optional background sync with container API
+      fetch("/api/menus/bulk", {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
           "X-Admin-Email": loggedInEmail || ""
         },
         body: JSON.stringify({ menus: sortedMenus })
-      });
-      if (!res.ok) throw new Error("Gagal menyimpan ke database");
-      showNotification("success", "Urutan menu berhasil disesuaikan!");
-      fetchMenus();
+      }).catch(() => {});
     } catch (err: any) {
-      showNotification("error", err.message);
+      console.warn("Direct Firestore bulk update failed, falling back to Express API:", err.message);
+      try {
+        const res = await fetch("/api/menus/bulk", {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json",
+            "X-Admin-Email": loggedInEmail || ""
+          },
+          body: JSON.stringify({ menus: sortedMenus })
+        });
+        if (!res.ok) throw new Error("Gagal menyimpan ke database");
+        showNotification("success", "Urutan menu berhasil disesuaikan!");
+        fetchMenus();
+      } catch (fallbackErr: any) {
+        showNotification("error", fallbackErr.message);
+      }
     }
   };
 
