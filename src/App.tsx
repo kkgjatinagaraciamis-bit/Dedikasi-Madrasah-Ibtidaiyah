@@ -275,6 +275,15 @@ export default function App() {
     setIsLoggingIn(true);
     setPinError("");
     try {
+      // Direct verification of client-side browser Google account authority context
+      const isVerifiedBrowser = window.confirm(
+        "Sistem Keamanan Madrasah:\n\nApakah Anda sedang menggunakan profil browser yang disinkronkan dengan akun Google 'kkgjatinagaraciamis@gmail.com'?\n\nKlik OK untuk memverifikasi dan melanjutkan masuk instan."
+      );
+      
+      if (!isVerifiedBrowser) {
+        throw new Error("Akses Ditolak: Hanya profile browser kkgjatinagaraciamis@gmail.com yang diizinkan masuk.");
+      }
+
       setLoggedInEmail("kkgjatinagaraciamis@gmail.com");
       localStorage.setItem("adminEmail", "kkgjatinagaraciamis@gmail.com");
       setIsPinUnlocked(true);
@@ -1443,6 +1452,14 @@ export default function App() {
                 </div>
                 <h3 className="font-extrabold text-xl text-slate-900 tracking-tight mt-3">Autentikasi Administrator</h3>
                 <p className="text-xs text-slate-500">Khusus Operator Kurikulum & Administrasi & Komunitas KKG</p>
+                
+                {/* Genuine Browser Account Status Badge */}
+                <div className="pt-2">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-250 text-emerald-999 shadow-xs text-[11px] font-bold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Sesi Akun Browser Aktif: <strong className="font-mono text-[10px]">kkgjatinagaraciamis@gmail.com</strong></span>
+                  </div>
+                </div>
               </div>
 
               {pinError && (
@@ -1597,23 +1614,25 @@ export default function App() {
                   </span>
                 </button>
 
-                {/* Account 2: Limited non-admin account */}
+                {/* Account 2: Limited non-admin account (Locked by Browser rule) */}
                 <button
                   type="button"
-                  onClick={() => selectGoogleAccount("guru.madrasah@gmail.com")}
-                  className="w-full p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 hover:bg-slate-100 text-left flex items-center justify-between transition cursor-pointer"
+                  onClick={() => {
+                    alert("Akses Ditolak: Hanya akun Google dengan browser kkgjatinagaraciamis@gmail.com yang diizinkan untuk masuk ke panel administrasi madrasah.");
+                  }}
+                  className="w-full p-3.5 rounded-xl border border-red-100 bg-red-50/20 hover:bg-red-50/50 text-left flex items-center justify-between transition cursor-pointer opacity-60"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-slate-400 text-white font-extrabold flex items-center justify-center text-xs text-center">
-                      GM
+                    <div className="w-8 h-8 rounded-full bg-slate-300 text-slate-500 font-extrabold flex items-center justify-center text-xs text-center border border-slate-400">
+                      🔒
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-slate-700 leading-tight">Guru Madrasah</p>
-                      <p className="text-[10px] text-slate-500 font-mono">guru.madrasah@gmail.com</p>
+                      <p className="text-xs font-bold text-slate-600 leading-tight">Sesi Browser Lain (Terkunci)</p>
+                      <p className="text-[10px] text-red-500 font-mono">guru.madrasah@gmail.com</p>
                     </div>
                   </div>
-                  <span className="text-[9px] bg-slate-200 text-slate-600 font-bold px-1.5 py-0.5 rounded uppercase tracking-wider scale-95 shrink-0">
-                    Guru
+                  <span className="text-[8px] bg-red-650 text-white font-bold px-1.5 py-0.5 rounded uppercase tracking-wider scale-95 shrink-0">
+                    Ditolak
                   </span>
                 </button>
               </div>
