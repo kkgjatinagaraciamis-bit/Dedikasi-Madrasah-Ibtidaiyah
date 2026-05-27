@@ -28,7 +28,8 @@ import {
   FileCheck2,
   Sparkles,
   RefreshCw,
-  MoreVertical
+  MoreVertical,
+  ExternalLink
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu } from "./types";
@@ -109,6 +110,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0); // For triggering content area reload transition
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isIframeFullscreen, setIsIframeFullscreen] = useState(false);
 
   // Mobile menu control
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -696,6 +698,373 @@ export default function App() {
     }
   };
 
+  // Fullscreen authenticated Admin Backend Dashboard mimicking lt2jatinagara.vercel.app/admin layout
+  if (isAdminMode && isPinUnlocked) {
+    return (
+      <div className="min-h-screen bg-[#f8f9fa] text-slate-800 font-sans flex flex-col selection:bg-red-100 selection:text-red-950" id="admin_backend_dashboard_fullscreen">
+        {/* Toast Notification Banner */}
+        <AnimatePresence>
+          {notification && (
+            <motion.div
+              initial={{ opacity: 0, y: -50, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.9 }}
+              className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-6 py-4 rounded-2xl shadow-xl border text-sm max-w-md w-11/12 md:w-auto ${
+                notification.type === "success"
+                  ? "bg-[#ea3323] text-white border-red-400"
+                  : "bg-red-700 text-white border-red-500"
+              }`}
+              id="toast_notification_admin"
+            >
+              <Check className="w-5 h-5 shrink-0" />
+              <span className="font-semibold leading-snug">{notification.message}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Sticky Dynamic Header matching lt2jatinagara.vercel.app/admin screenshot layout */}
+        <header className="sticky top-0 z-40 bg-white text-slate-900 border-b border-gray-200 py-3.5 px-6 sm:px-8 shadow-xs flex items-center justify-between" id="admin_panel_fullscreen_header">
+          <div className="flex items-center gap-4">
+            {/* Back Button */}
+            <button 
+              onClick={() => {
+                setIsAdminMode(false);
+                showNotification("success", "Kembali ke Beranda Utama Madrasah");
+              }}
+              className="p-2 hover:bg-slate-100 text-slate-700 rounded-full transition flex items-center justify-center cursor-pointer border border-transparent hover:border-slate-200"
+              title="Kembali ke Beranda"
+              id="admin_header_back_btn"
+            >
+              <ArrowLeft className="w-6 h-6 text-slate-800 stroke-[2.5]" />
+            </button>
+            <div className="flex flex-col text-left">
+              <h1 className="font-black text-xl tracking-[0.05em] text-slate-900 font-sans leading-none">
+                ADMIN PANEL
+              </h1>
+              <span className="text-[10px] font-mono font-bold text-slate-400 mt-1.5 uppercase tracking-wider">
+                KKGJATINAGARACIAMIS@GMAIL.COM
+              </span>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            {/* SIMPAN CLOUD Red Pill Button */}
+            <button
+              onClick={() => {
+                // Submit the active menu draft form programmatically
+                const submitBtn = document.getElementById("admin_save_menu_submit_btn");
+                if (submitBtn) {
+                  submitBtn.click();
+                } else {
+                  showNotification("error", "Silakan pilih atau sunting salah satu berkas terlebih dahulu.");
+                }
+              }}
+              className="bg-[#ea3323] hover:bg-red-750 text-white text-xs font-black tracking-wide px-6 py-3 rounded-full shadow-md hover:shadow-lg transition-all active:scale-95 flex items-center gap-2 cursor-pointer border border-[#d62415]"
+              id="admin_header_save_cloud_btn"
+            >
+              <span>💾 SIMPAN CLOUD</span>
+            </button>
+
+            <button
+               onClick={handleResetToDefault}
+               className="hidden sm:flex px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-705 hover:text-slate-900 rounded-full border border-slate-205 text-xs font-bold transition items-center gap-1.5 shadow-xs cursor-pointer"
+               title="Kembalikan semua menu ke setelan standar"
+            >
+              <RotateCw className="w-3.5 h-3.5" />
+              <span>Reset Data</span>
+            </button>
+          </div>
+        </header>
+
+        {/* Dashboard Body Content */}
+        <main className="flex-1 w-full max-w-7xl mx-auto py-8 px-4 sm:px-6 md:px-8 space-y-8" id="admin_main_body">
+          {/* Dashboard Headings Panel resembling the screenshot but customized for Madrasah */}
+          <div className="bg-white rounded-3xl p-6 md:p-8 border border-slate-150 shadow-xs space-y-4">
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 border-b border-slate-100 pb-5">
+              <div className="space-y-1 text-left">
+                <h2 className="italic font-extrabold text-2xl tracking-tight text-[#ea3323] uppercase">
+                  PENGATURAN ADMINISTRASI GURU MI
+                </h2>
+                <p className="text-[11px] text-slate-400 font-bold uppercase tracking-wider leading-relaxed">
+                  KELOLA FORMULA DOKUMEN DAN TAUTAN EKSTERNAL MADRASAH IBTIDAIYAH SECARA REAL-TIME SYNC
+                </p>
+              </div>
+
+              {/* Status Badges resembling the score counter look */}
+              <div className="flex flex-wrap gap-2">
+                <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#ea3323] text-white font-black text-[10px] tracking-wider shadow-xs">
+                  🌐 ONLINE DATA
+                  <span className="bg-white/20 px-2 py-0.5 rounded-full text-[9px] font-mono leading-none">{menus.length}</span>
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white border border-[#faccc8] text-[#ea3323] font-black text-[10px] tracking-wider shadow-xs">
+                  🔒 BACKEND SECURE
+                </span>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-500 leading-relaxed text-left">
+              Sesi Admin Aktif: <strong className="font-mono text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded">kkgjatinagaraciamis@gmail.com</strong>. Perubahan yang Anda lakukan disimpan secara real-time ke database cloud Google Firestore.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8" id="admin_backend_grid">
+            
+            {/* Left Column (Lists & Order Controller) */}
+            <div className="lg:col-span-12 xl:col-span-5 space-y-4 text-left">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-bold uppercase text-slate-400 tracking-wider font-mono">Daftar Tombol Navigasi Madrasah</h4>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingMenu({
+                      id: "",
+                      title: "",
+                      icon: "BookOpen",
+                      content: "",
+                      reloadUrl: "",
+                      isActive: true,
+                      order: menus.length + 1
+                    });
+                    setTimeout(() => {
+                      document.getElementById("editor_title_input")?.focus();
+                    }, 50);
+                  }}
+                  className="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-850 rounded-xl text-xs font-black transition flex items-center gap-1 border border-emerald-150 shadow-xs cursor-pointer"
+                  id="add_new_menu_trigger_admin"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Tambah Kategori</span>
+                </button>
+              </div>
+
+              <div className="bg-white rounded-3xl border border-slate-150 p-4 space-y-2">
+                {menus.map((menu, index) => (
+                  <div
+                    key={menu.id}
+                    className={`p-3.5 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
+                      editingMenu?.id === menu.id
+                        ? "bg-red-50/40 border-red-200 shadow-sm"
+                        : "bg-white border-slate-200/85 hover:border-slate-300"
+                    }`}
+                  >
+                    <div
+                      className="flex items-center gap-3 cursor-pointer flex-1 min-w-0"
+                      onClick={() => handleEditSelect(menu)}
+                    >
+                      <span className="w-7 h-7 bg-slate-100 rounded-xl flex items-center justify-center text-[#ea3323] shrink-0 text-xs font-extrabold font-mono">
+                        {index + 1}
+                      </span>
+                      <div className="truncate text-left">
+                        <p className="text-xs font-extrabold text-slate-800 leading-tight truncate">{menu.title}</p>
+                        <span className="text-[9px] text-slate-450 font-mono truncate block mt-1.5">
+                          {menu.reloadUrl ? `Direct Frame URL: ${menu.reloadUrl}` : "Isi Halaman (Rich HTML)"}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1 shrink-0">
+                      {/* Direction Controls */}
+                      <button
+                        type="button"
+                        disabled={index === 0}
+                        onClick={() => adjustOrder(menu.id, "up")}
+                        className="p-1 w-6 h-6 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-755 disabled:opacity-30 transition cursor-pointer flex items-center justify-center text-xs"
+                        title="Geser Atas"
+                      >
+                        ▲
+                      </button>
+                      <button
+                        type="button"
+                        disabled={index === menus.length - 1}
+                        onClick={() => adjustOrder(menu.id, "down")}
+                        className="p-1 w-6 h-6 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-755 disabled:opacity-30 transition cursor-pointer flex items-center justify-center text-xs"
+                        title="Geser Bawah"
+                      >
+                        ▼
+                      </button>
+                      
+                      <div className="w-px h-4 bg-slate-205 mx-1"></div>
+
+                      {/* Trash Button */}
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteMenu(menu.id, menu.title)}
+                        className="p-1.5 hover:bg-red-50 rounded-lg text-slate-400 hover:text-[#ea3323] transition cursor-pointer"
+                        title="Hapus Menu"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column (Form & HTML Editor Workspace) */}
+            <div className="lg:col-span-12 xl:col-span-7">
+              {editingMenu ? (
+                <form id="admin_edit_menu_form" onSubmit={handleSaveMenu} className="bg-white rounded-3xl border border-slate-150 p-6 space-y-5 text-left shadow-xs">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3.5">
+                    <h4 className="font-extrabold text-xs uppercase text-slate-450 tracking-wider">
+                      {editingMenu.id ? "Sunting Berkas Administrasi MI" : "Unduh Formula Baru"}
+                    </h4>
+                    <span className="text-[10px] bg-red-100 text-[#ea3323] px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">
+                      {editingMenu.id ? "Sunting Sesi" : "Kategori Baru"}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5 flex flex-col">
+                      <label className="text-[10px] font-black text-slate-450 uppercase tracking-widest block font-sans">ID Unik Menu *</label>
+                      <input
+                        type="text"
+                        required
+                        disabled={!!editingMenu.id} // Primary key block
+                        placeholder="contoh: rpp-kelas-6"
+                        value={editingMenu.id || ""}
+                        onChange={(e) => setEditingMenu(prev => ({ ...prev, id: e.target.value.toLowerCase().trim().replace(/[^a-z0-9\-]/g, "-") }))}
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:ring-1 focus:ring-red-500 outline-none text-xs text-slate-800 font-mono disabled:opacity-60"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5 flex flex-col">
+                      <label className="text-[10px] font-black text-slate-450 uppercase tracking-widest block font-sans">Nama / Judul Tombol *</label>
+                      <input
+                        type="text"
+                        required
+                        id="editor_title_input"
+                        placeholder="Contoh: Jadwal Mengajar Guru"
+                        value={editingMenu.title || ""}
+                        onChange={(e) => setEditingMenu(prev => ({ ...prev, title: e.target.value }))}
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:ring-1 focus:ring-red-500 outline-none text-xs text-slate-800 font-bold"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5 flex flex-col">
+                      <label className="text-[10px] font-black text-slate-450 uppercase tracking-widest block font-sans">Ikon Visual (Lucide)</label>
+                      <select
+                        value={editingMenu.icon || "BookOpen"}
+                        onChange={(e) => setEditingMenu(prev => ({ ...prev, icon: e.target.value }))}
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:ring-1 focus:ring-red-500 outline-none text-xs text-slate-705 cursor-pointer"
+                      >
+                        <option value="BookOpen">📖 Buku Terbuka (BookOpen)</option>
+                        <option value="FileText">📄 Dokumen Teks (FileText)</option>
+                        <option value="GraduationCap">🎓 Topi Wisuda (GraduationCap)</option>
+                        <option value="Award">🏆 Penghargaan (Award)</option>
+                        <option value="Calendar">📅 Kalender Akad (Calendar)</option>
+                        <option value="Building">🏢 Gedung Sekolah (Building)</option>
+                        <option value="Users">👥 Komunitas Guru (Users)</option>
+                        <option value="School">🏫 Madrasah Utama (School)</option>
+                        <option value="Settings">⚙ Setelan Sist (Settings)</option>
+                        <option value="List">📋 Daftar Tabel (List)</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-1.5 flex flex-col">
+                      <label className="text-[10px] font-black text-slate-450 uppercase tracking-widest block font-sans">Link Reload Luar / Vercel Deploy / Google Drive (Opsional)</label>
+                      <input
+                        type="url"
+                        placeholder="https://proyek-anda.vercel.app atau Google Docs..."
+                        value={editingMenu.reloadUrl || ""}
+                        onChange={(e) => setEditingMenu(prev => ({ ...prev, reloadUrl: e.target.value }))}
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:ring-1 focus:ring-red-500 outline-none text-xs text-slate-850"
+                      />
+                      <p className="text-[9px] text-slate-450 leading-snug">
+                        Sangat cocok untuk tautan deploy <b>Vercel</b> (<code>https://*.vercel.app</code>), Google Sheets, atau link sematan/dokumen luar. Pastikan menyertakan prefiks <code>https://</code> di awal.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5 flex flex-col text-left">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[10px] font-black text-slate-450 uppercase tracking-widest block font-sans">Isi Dokumen Utama (Format HTML / Naskah)</label>
+                      <div className="flex gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => applyTemplate("rpp")}
+                          className="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded text-[9px] font-bold text-slate-650 transition cursor-pointer"
+                        >
+                          + RPP
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => applyTemplate("jadwal")}
+                          className="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded text-[9px] font-bold text-slate-650 transition cursor-pointer"
+                        >
+                          + Jadwal
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => applyTemplate("checklist")}
+                          className="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded text-[9px] font-bold text-slate-650 transition cursor-pointer"
+                        >
+                          + Checklist
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <textarea
+                      rows={10}
+                      placeholder="Tulis kode HTML atau deskripsi program di sini..."
+                      value={editingMenu.content || ""}
+                      onChange={(e) => setEditingMenu(prev => ({ ...prev, content: e.target.value }))}
+                      className="w-full p-4 rounded-xl border border-slate-200 bg-white focus:ring-1 focus:ring-red-500 outline-none text-xs text-slate-800 font-mono"
+                    />
+                  </div>
+
+                  {/* Live Preview Block */}
+                  {editingMenu.content && !editingMenu.reloadUrl && (
+                    <div className="bg-slate-50 p-4 rounded-2xl border border-slate-150 space-y-2">
+                      <span className="text-[9px] font-bold text-red-800 bg-red-50 border border-red-100 px-1.5 py-0.5 rounded tracking-wide uppercase">Draf Pratinjau Langsung:</span>
+                      <div 
+                        className="text-xs text-slate-800 space-y-2 prose prose-slate max-w-none shadow-xs p-3 bg-white rounded-xl border border-slate-200/80 overflow-auto max-h-48 text-left"
+                        dangerouslySetInnerHTML={{ __html: editingMenu.content }}
+                      />
+                    </div>
+                  )}
+
+                  <div className="flex gap-2.5 justify-end pt-3 border-t border-slate-100">
+                    <button
+                      type="button"
+                      onClick={() => setEditingMenu(null)}
+                      className="px-4.5 py-2 hover:bg-slate-100 text-slate-500 hover:text-slate-755 rounded-full font-bold text-xs transition cursor-pointer"
+                    >
+                      Batal
+                    </button>
+                    <button
+                      type="submit"
+                      id="admin_save_menu_submit_btn"
+                      disabled={isSaving}
+                      className="px-6 py-2 bg-[#ea3323] hover:bg-red-700 text-white rounded-full font-black text-xs transition flex items-center gap-1.5 shadow-md cursor-pointer border border-[#d62415]"
+                    >
+                      {isSaving ? <RotateCw className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
+                      <span>SIMPAN PERUBAHAN</span>
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <div className="h-full min-h-[400px] border-2 border-dashed border-slate-200 rounded-3xl flex flex-col items-center justify-center p-8 text-center space-y-3 bg-white">
+                  <FileText className="w-14 h-14 text-slate-350 animate-pulse" />
+                  <h5 className="font-bold text-slate-500 text-sm">Belum Ada Menu Dipilih</h5>
+                  <p className="text-xs text-slate-450 max-w-xs leading-relaxed">
+                    Silakan klik salah satu menu di kolom kiri untuk mulai menyunting data, atau klik tombol <strong className="text-red-700 font-bold">Tambah Kategori</strong> untuk membuat naskah baru.
+                  </p>
+                </div>
+              )}
+            </div>
+
+          </div>
+        </main>
+
+        <footer className="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 text-center text-xs mt-12" id="admin_footer">
+          <p>© 2026 Madrasah Ibtidaiyah Jatinagara • Panel Manajemen Secure KKG Jatinagara Ciamis</p>
+        </footer>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col selection:bg-emerald-100 selection:text-emerald-900" id="main_app_wrapper">
       
@@ -1056,8 +1425,29 @@ export default function App() {
               {activeMenu.reloadUrl ? (
                 <div className="bg-white rounded-2xl border border-slate-205 overflow-hidden shadow-sm" id="iframe_container">
                   <div className="bg-slate-50 px-4 py-2 text-xs text-slate-500 font-mono flex items-center justify-between border-b border-slate-200">
-                    <span className="truncate">Tautan eksternal termuat: {activeMenu.reloadUrl}</span>
-                    <span className="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-1.5 py-0.5 rounded">Frame Aktif</span>
+                    <span className="truncate pr-4">Tautan eksternal termuat: {activeMenu.reloadUrl}</span>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <button
+                        onClick={() => setIsIframeFullscreen(true)}
+                        className="bg-emerald-700 hover:bg-emerald-800 text-white text-[10px] font-bold px-2 py-1 rounded-lg transition flex items-center gap-1 shrink-0 cursor-pointer"
+                        id="open_fullscreen_handler"
+                        title="Buka Layar Penuh (Fullscreen)"
+                      >
+                        <Sparkles className="w-2.5 h-2.5 text-yellow-300 animate-pulse" />
+                        <span>Layar Penuh</span>
+                      </button>
+                      <a 
+                        href={activeMenu.reloadUrl} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        className="bg-emerald-50 hover:bg-emerald-100 border border-emerald-250 text-[#0d5c3a] text-[10px] font-bold px-2 py-1 rounded-lg transition flex items-center gap-1 shrink-0"
+                        id="open_tab_handler"
+                      >
+                        <ExternalLink className="w-2.5 h-2.5" />
+                        <span>Buka Tab Baru</span>
+                      </a>
+                      <span className="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-1.5 py-1 rounded-lg border border-emerald-200">Frame Aktif</span>
+                    </div>
                   </div>
                   <iframe 
                     src={activeMenu.reloadUrl} 
@@ -1066,7 +1456,7 @@ export default function App() {
                     id="menu_iframe"
                   />
                   <div className="bg-slate-100 p-3.5 text-center text-xs text-slate-650 font-medium border-t border-slate-200">
-                    Halaman ini dimuat otomatis tanpa membuka tab browser baru. Tekan tombol <strong className="cursor-pointer underline text-emerald-800" onClick={handleReturnHome}>Kembali Utama</strong> di atas untuk melihat agenda madrasah lainnya.
+                    Halaman ini dimuat otomatis tanpa membuka tab browser baru. Bila tautan tidak tampil akibat aturan privasi, ketuk tombol <strong className="text-emerald-800 font-bold hover:underline"><a href={activeMenu.reloadUrl} target="_blank" rel="noreferrer">Buka Tab Baru</a></strong> di pojok kanan atas.
                   </div>
                 </div>
               ) : (
@@ -1321,15 +1711,18 @@ export default function App() {
                             </select>
                           </div>
 
-                          <div className="space-y-1.5">
-                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block font-sans">Link Reload Luar / Google Drive (Opsional)</label>
+                           <div className="space-y-1.5">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block font-sans">Link Reload Luar / Vercel Deploy / Google Drive (Opsional)</label>
                             <input
                               type="url"
-                              placeholder="https://docs.google.com/embed..."
+                              placeholder="https://proyek-anda.vercel.app atau Google Docs..."
                               value={editingMenu.reloadUrl || ""}
                               onChange={(e) => setEditingMenu(prev => ({ ...prev, reloadUrl: e.target.value }))}
                               className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white focus:ring-1 focus:ring-emerald-500 outline-none text-xs text-slate-800"
                             />
+                            <p className="text-[9px] text-slate-500 leading-snug">
+                              Mendukung tautan deploy <b>Vercel</b> (<code>https://*.vercel.app</code>), custom domain, atau link sematan/dokumen luar. Pastikan menyertakan prefiks <code>https://</code> di awal.
+                            </p>
                           </div>
                         </div>
 
@@ -1655,6 +2048,63 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Fullscreen Overlay for external Iframe apps like Vercel deploys */}
+      {isIframeFullscreen && activeMenu && activeMenu.reloadUrl && (
+        <div className="fixed inset-0 z-50 bg-slate-900 flex flex-col" id="iframe_fullscreen_overlay">
+          {/* Header Bar */}
+          <div className="bg-slate-950 px-4 py-3 flex items-center justify-between text-white border-b border-slate-800">
+            <div className="flex items-center gap-3 min-w-0">
+              <button
+                onClick={() => setIsIframeFullscreen(false)}
+                className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition whitespace-nowrap cursor-pointer"
+                id="close_fullscreen_btn"
+                title="Tutup mode layar penuh"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Tutup Layar Penuh</span>
+              </button>
+              <div className="hidden md:block truncate text-left">
+                <h3 className="text-xs md:text-sm font-bold leading-tight truncate text-emerald-400">{activeMenu.title}</h3>
+                <span className="text-[10px] text-slate-400 font-mono truncate block">{activeMenu.reloadUrl}</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={handleReloadContent}
+                disabled={isRefreshing}
+                className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition disabled:opacity-50 cursor-pointer"
+                id="fullscreen_reload_btn"
+                title="Muat ulang halaman frame saat ini"
+              >
+                <RotateCw className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin" : ""}`} />
+                <span>Muat Ulang (Reload)</span>
+              </button>
+              <a
+                href={activeMenu.reloadUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="p-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
+                id="fullscreen_external_btn"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Buka Tab Baru</span>
+              </a>
+            </div>
+          </div>
+          {/* Main Full View Frame */}
+          <div className="flex-1 w-full bg-white relative">
+            <iframe
+              src={activeMenu.reloadUrl}
+              key={`iframe-fullscreen-${reloadKey}`}
+              className="w-full h-full border-none"
+              title={activeMenu.title}
+              id="fullscreen_menu_iframe"
+            />
+          </div>
+        </div>
+      )}
 
     </div>
   );
