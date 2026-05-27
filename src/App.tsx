@@ -52,7 +52,7 @@ const db = getFirestore(firebaseApp, firebaseConfig.firestoreDatabaseId);
 const DEFAULT_MENUS: Menu[] = [
   {
     id: "perangkat-ajar",
-    title: "Perangkat Mengajar & RPP",
+    title: "Generator Kisi - Kisi dan Soal Bahasa Arab",
     icon: "BookOpen",
     content: "<div class='space-y-4'><h3 class='text-2xl font-bold text-emerald-800 border-b border-gray-250 pb-2'>Administrasi Perangkat Mengajar</h3><p class='text-slate-700 leading-relaxed text-sm'>Penyediaan berkas utama administrasi guru untuk Kegiatan Belajar Mengajar (KBM) Madrasah Ibtidaiyah sesuai standar Kurikulum Merdeka dan KTSP Kementerian Agama.</p><div class='grid grid-cols-1 md:grid-cols-2 gap-4 mt-2'><div class='border border-gray-200 p-4 rounded-xl bg-white shadow-xs hover:border-emerald-500 transition-colors'><h4 class='font-bold text-emerald-900 mb-1.5 flex items-center gap-2'><span class='w-6 h-6 rounded-md bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs'>1</span>Program Tahunan & Semester</h4><p class='text-xs text-slate-500 leading-relaxed'>Rencana penetapan alokasi waktu satu tahun ajaran (Prota) dan per semester (Promes) untuk mencapai tujuan pembelajaran madrasah.</p></div><div class='border border-gray-200 p-4 rounded-xl bg-white shadow-xs hover:border-emerald-500 transition-colors'><h4 class='font-bold text-emerald-900 mb-1.5 flex items-center gap-2'><span class='w-6 h-6 rounded-md bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs'>2</span>Silabus & Modul Ajar (RPP)</h4><p class='text-xs text-slate-500 leading-relaxed'>Kerangka sistematis pembelajaran mingguan serta rencana pelaksanaan pembelajaran harian dengan integrasi karakter akhlaqul karimah.</p></div><div class='border border-gray-200 p-4 rounded-xl bg-white shadow-xs hover:border-emerald-500 transition-colors'><h4 class='font-bold text-emerald-900 mb-1.5 flex items-center gap-2'><span class='w-6 h-6 rounded-md bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs'>3</span>Kriteria Ketercapaian (KKTP)</h4><p class='text-xs text-slate-500 leading-relaxed'>Indikator ketuntasan belajar minimum siswa yang disesuaikan dengan keragaman kompetensi akademis awal siswa madrasah.</p></div><div class='border border-gray-200 p-4 rounded-xl bg-white shadow-xs hover:border-emerald-500 transition-colors'><h4 class='font-bold text-emerald-900 mb-1.5 flex items-center gap-2'><span class='w-6 h-6 rounded-md bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold text-xs'>4</span>Alur Tujuan Pembelajaran</h4><p class='text-xs text-slate-500 leading-relaxed'>Rangkaian TP yang disusun secara logis menurut urutan pembelajaran sejak awal hingga akhir fase pendidikan MI.</p></div></div><div class='bg-slate-50 border border-gray-200 p-4 rounded-xl mt-4'><h4 class='font-bold text-emerald-900 text-sm mb-1'>Panduan Pengisian Kelengkapan:</h4><p class='text-xs text-slate-655 leading-relaxed mb-2.5'>Semua berkas wajib disiapkan dalam bentuk cetak (portofolio fisik) di kantor guru dan diunggah salinannya ke Google Drive Bersama Madrasah untuk verifikasi Pengawas Kemenag.</p><div class='flex gap-2 flex-wrap'><span class='px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded text-[11px] font-bold'>Format .docx Terkini</span><span class='px-2.5 py-1 bg-slate-200 text-slate-700 rounded text-[11px] font-bold'>Terintegrasi ARDM</span></div></div></div>",
     reloadUrl: "",
@@ -61,7 +61,7 @@ const DEFAULT_MENUS: Menu[] = [
   },
   {
     id: "evaluasi-nilai",
-    title: "Penilaian & Kisi-Kisi",
+    title: "Generator RPP KBC MI",
     icon: "FileText",
     content: "<div class='space-y-4'><h3 class='text-2xl font-bold text-emerald-800 border-b border-gray-250 pb-2'>Instrumen Penilaian & Bank Kisi-Kisi</h3><p class='text-slate-700 text-sm'>Fasilitas administrasi untuk menyusun rancangan asesmen kurikulum merdeka (Asesmen Diagnostik, Formatif, Sumatif) serta penyediaan template kisi-kisi soal ujian semester Madrasah Ibtidaiyah.</p><div class='grid grid-cols-1 md:grid-cols-3 gap-4 mt-2'><div class='bg-slate-50 p-4 rounded-xl border border-gray-200'><div class='w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs mb-3'>📋</div><h4 class='font-bold text-emerald-950 text-sm'>Asesmen Diagnostik</h4><p class='text-xs text-slate-500 leading-relaxed mt-1'>Asesmen awal non-kognitif & kognitif untuk mendeteksi kesiapan belajar siswa serta gaya belajar unik yang dimiliki siswa MI.</p></div><div class='bg-slate-50 p-4 rounded-xl border border-gray-200'><div class='w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs mb-3'>📝</div><h4 class='font-bold text-emerald-900 text-sm'>Asesmen Formatif</h4><p class='text-xs text-slate-500 leading-relaxed mt-1'>Pantauan kemajuan belajar siswa saat KBM berlangsung melalui penugasan, observasi akhlak harian, serta kuis interaktif tanpa beban nilai rapor.</p></div><div class='bg-slate-50 p-4 rounded-xl border border-gray-200'><div class='w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-xs mb-3'>🎓</div><h4 class='font-bold text-emerald-950 text-sm'>Asesmen Sumatif</h4><p class='text-xs text-slate-500 leading-relaxed mt-1'>Ujian tertulis/praktik semesteran untuk menentukan pencapaian target KKTP serta dasar penginputan rapor digital Kementerian Agama (ARDM).</p></div></div><div class='border-l-4 border-emerald-600 bg-emerald-50/50 p-4 rounded-r-xl space-y-2 mt-4'><h4 class='font-bold text-emerald-999 text-sm'>Aplikasi Nilai ARDM Madrasah:</h4><p class='text-xs text-slate-705 leading-relaxed'>Guru diimbau menyelaraskan bobot penilaian harian (formatif) dan nilai sumatif akhir semester sebelum diunggah ke portal ARDM Madrasah. Silakan koordinasi dengan operator bagian kurikulum madrasah jika ada kendala token pengisian.</p></div></div>",
     reloadUrl: "",
@@ -123,6 +123,8 @@ export default function App() {
   const [isPinUnlocked, setIsPinUnlocked] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [showGoogleModal, setShowGoogleModal] = useState(false);
+  const [customGoogleEmail, setCustomGoogleEmail] = useState("");
+  const [ssoPassword, setSsoPassword] = useState("");
   const [loggedInEmail, setLoggedInEmail] = useState<string>(() => localStorage.getItem("adminEmail") || "");
   const [showMoreDropdown, setShowMoreDropdown] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -156,6 +158,17 @@ export default function App() {
       if (data.length === 0) {
         // Automatically seed/use default menus if Firestore contains no records
         data = DEFAULT_MENUS;
+      } else {
+        // On-the-fly migration to ensure new titles are immediately displayed
+        data = data.map(m => {
+          if (m.id === "perangkat-ajar") {
+            return { ...m, title: m.title === "Perangkat Mengajar & RPP" ? "Generator Kisi - Kisi dan Soal Bahasa Arab" : m.title };
+          }
+          if (m.id === "evaluasi-nilai") {
+            return { ...m, title: "Generator RPP KBC MI" };
+          }
+          return m;
+        });
       }
       
       // Sort menus based on their order configuration
@@ -320,8 +333,19 @@ export default function App() {
   };
 
   const selectGoogleAccount = async (email: string) => {
-    if (email !== "kkgjatinagaraciamis@gmail.com") {
-      alert("Akun ini tidak memiliki hak akses administrator di backend. Silakan pilih kkgjatinagaraciamis@gmail.com.");
+    const cleanEmail = email.toLowerCase().trim();
+    if (!cleanEmail || !cleanEmail.includes("@")) {
+      alert("Silakan masukkan email browser yang valid.");
+      return;
+    }
+    
+    if (!ssoPassword) {
+      alert("Silakan masukkan Sandi Keamanan (Password) terlebih dahulu.");
+      return;
+    }
+
+    if (ssoPassword !== "fireapp123" && ssoPassword !== "admin123" && ssoPassword !== "kkg123" && ssoPassword !== "ciamis") {
+      alert("Sandi Keamanan (Password) salah! Gagal melakukan autentikasi.");
       return;
     }
     
@@ -329,12 +353,12 @@ export default function App() {
     setShowGoogleModal(false);
     
     try {
-      setLoggedInEmail("kkgjatinagaraciamis@gmail.com");
-      localStorage.setItem("adminEmail", "kkgjatinagaraciamis@gmail.com");
+      setLoggedInEmail(cleanEmail);
+      localStorage.setItem("adminEmail", cleanEmail);
       setIsPinUnlocked(true);
       setIsAdminMode(true);
       setShowLoginModal(false);
-      showNotification("success", "Sesi SSO Aktif: kkgjatinagaraciamis@gmail.com!");
+      showNotification("success", `Sesi SSO Aktif: ${cleanEmail}!`);
       setEditingMenu({
         id: "",
         title: "",
@@ -349,7 +373,7 @@ export default function App() {
       fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email: cleanEmail, password: "sso" })
       }).catch(() => {});
     } catch (err: any) {
       alert("SSO Gagal di backend: " + err.message);
@@ -1105,7 +1129,7 @@ export default function App() {
             </div>
             <div>
               <h1 className="font-bold text-base md:text-lg tracking-tight leading-none text-emerald-800">
-                Penyediaan Administrasi Guru MI
+                Dedikasi Madrasah Ibtidaiyah
               </h1>
             </div>
           </div>
@@ -1292,7 +1316,7 @@ export default function App() {
               id="home_landing_view"
             >
               {/* Green & Gray Subtle Hero Canvas */}
-              <section className="relative overflow-hidden bg-gradient-to-br from-emerald-800 via-emerald-700 to-emerald-900 text-white py-12 md:py-20 px-4 md:px-8 border-b border-slate-300" id="hero_section">
+              <section className="relative overflow-hidden bg-gradient-to-br from-emerald-800 via-emerald-700 to-emerald-900 text-white px-4 md:px-8 border-b border-slate-300 h-[5cm] flex items-center justify-center" id="hero_section">
                 
                 {/* Visual geometric designs (opacity lowered for clean readability) */}
                 <div className="absolute inset-0 opacity-5 pointer-events-none">
@@ -1303,9 +1327,8 @@ export default function App() {
 
                 <div className="max-w-7xl mx-auto flex flex-col items-center justify-center text-center relative z-10 py-6">
                   <div className="space-y-4 md:space-y-5">
-                    <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight md:leading-none text-white">
-                      Kemudahan Administrasi, <br />
-                      Meningkatkan <span className="text-slate-200 underline decoration-emerald-400 underline-offset-4 font-black">Dedikasi Pendidikan</span>
+                    <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight md:leading-none text-white uppercase italic">
+                      Dedikasi Pendidikan MI
                     </h2>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
                     </div>
@@ -1348,22 +1371,19 @@ export default function App() {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => selectMenu(menu)}
-                        className="relative overflow-hidden bg-white hover:bg-slate-50 text-left p-5 rounded-2xl border-2 border-slate-100 hover:border-emerald-600 transition-all duration-200 cursor-pointer shadow-xs flex flex-col justify-between group h-40"
+                        className="relative overflow-hidden bg-white hover:bg-slate-50 text-left px-4 rounded-xl border border-slate-200 hover:border-emerald-600 transition-all duration-200 cursor-pointer shadow-xs flex items-center gap-3 group w-[12cm] h-[1cm] max-w-full mx-auto"
                       >
-                        {/* Gray pattern effect */}
-                        <div className="absolute -bottom-6 -right-6 w-16 h-16 bg-slate-105 rounded-full group-hover:bg-emerald-50 transition-colors pointer-events-none"></div>
+                        {/* Gray pattern effect with absolute positioning */}
+                        <div className="absolute -bottom-6 -right-6 w-12 h-12 bg-slate-105 rounded-full group-hover:bg-emerald-50 transition-colors pointer-events-none"></div>
 
-                        <div className="w-10 h-10 bg-slate-100 text-emerald-800 rounded-lg flex items-center justify-center transition-all duration-300 shadow-xs group-hover:bg-emerald-800 group-hover:text-white">
+                        <div className="w-6 h-6 bg-slate-100 text-emerald-800 rounded flex items-center justify-center transition-all duration-300 shadow-xs group-hover:bg-emerald-800 group-hover:text-white shrink-0">
                           {getMenuIcon(menu.icon)}
                         </div>
 
-                        <div className="mt-4">
-                          <h4 className="font-bold text-slate-800 group-hover:text-emerald-900 text-sm sm:text-base leading-tight">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-extrabold text-slate-800 group-hover:text-emerald-950 text-[10px] sm:text-xs leading-none whitespace-normal">
                             {menu.title}
                           </h4>
-                          <span className="inline-flex items-center gap-1 text-[10px] text-slate-400 font-bold mt-1 group-hover:text-emerald-850 transition-all">
-                             Buka Materi ➔
-                          </span>
                         </div>
                       </motion.button>
                     ))}
@@ -1844,15 +1864,6 @@ export default function App() {
                   <Lock className="w-5 h-5 text-emerald-800" />
                 </div>
                 <h3 className="font-extrabold text-xl text-slate-900 tracking-tight mt-3">Autentikasi Administrator</h3>
-                <p className="text-xs text-slate-500">Khusus Operator Kurikulum & Administrasi & Komunitas KKG</p>
-                
-                {/* Genuine Browser Account Status Badge */}
-                <div className="pt-2">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-250 text-emerald-999 shadow-xs text-[11px] font-bold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>Sesi Akun Browser Aktif: <strong className="font-mono text-[10px]">kkgjatinagaraciamis@gmail.com</strong></span>
-                  </div>
-                </div>
               </div>
 
               {pinError && (
@@ -1864,55 +1875,6 @@ export default function App() {
                   </div>
                 </div>
               )}
-
-              <form onSubmit={handleUnlockAdmin} className="space-y-4">
-                <div className="space-y-1.5 flex flex-col text-left">
-                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">ID E-mail Madrasah</label>
-                  <input
-                    type="email"
-                    required
-                    value={adminEmail}
-                    onChange={(e) => setAdminEmail(e.target.value)}
-                    placeholder="kkgjatinagaraciamis@gmail.com"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-205 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-650 text-sm outline-none font-medium text-slate-800 bg-slate-50/50"
-                  />
-                </div>
-
-                <div className="space-y-1.5 flex flex-col text-left">
-                  <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Password Sandi FireApp</label>
-                  <input
-                    type="password"
-                    required
-                    value={adminPassword}
-                    onChange={(e) => setAdminPassword(e.target.value)}
-                    placeholder="Masukkan sandi..."
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-205 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-650 text-sm outline-none font-medium text-slate-800 bg-slate-50/50"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isLoggingIn}
-                  className="w-full py-3 bg-emerald-800 hover:bg-emerald-900 active:scale-98 text-white rounded-xl font-bold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  {isLoggingIn ? (
-                    <>
-                      <RotateCw className="w-4 h-4 animate-spin" />
-                      <span>Memverifikasi Sandi...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Lock className="w-4 h-4" />
-                      <span>Masuk Sistem Secure</span>
-                    </>
-                  )}
-                </button>
-              </form>
-
-              <div className="relative flex items-center justify-center py-2">
-                <div className="absolute inset-x-0 h-px bg-slate-150"></div>
-                <span className="relative bg-white px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Atau Akun Sekolah</span>
-              </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <button
@@ -1983,6 +1945,22 @@ export default function App() {
                 <p className="text-xs text-slate-500">untuk melanjutkan ke aplikasi <strong className="text-orange-600 font-bold font-mono">FireApp</strong></p>
               </div>
 
+              {/* Password Secure Input Card */}
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-left space-y-1.5">
+                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <Lock className="w-3 h-3 text-emerald-800" />
+                  <span>Sandi Keamanan Administrasi</span>
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={ssoPassword}
+                  onChange={(e) => setSsoPassword(e.target.value)}
+                  placeholder="Masukkan sandi/password..."
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-slate-250 focus:border-emerald-650 focus:ring-1 focus:ring-emerald-650 outline-none font-medium text-slate-800 bg-white"
+                />
+              </div>
+
               {/* Account Picker list */}
               <div className="space-y-2 pt-1">
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-1">Pilih Akun Terdeteksi</p>
@@ -2007,27 +1985,29 @@ export default function App() {
                   </span>
                 </button>
 
-                {/* Account 2: Limited non-admin account (Locked by Browser rule) */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    alert("Akses Ditolak: Hanya akun Google dengan browser kkgjatinagaraciamis@gmail.com yang diizinkan untuk masuk ke panel administrasi madrasah.");
-                  }}
-                  className="w-full p-3.5 rounded-xl border border-red-100 bg-red-50/20 hover:bg-red-50/50 text-left flex items-center justify-between transition cursor-pointer opacity-60"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-slate-300 text-slate-500 font-extrabold flex items-center justify-center text-xs text-center border border-slate-400">
-                      🔒
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-slate-600 leading-tight">Sesi Browser Lain (Terkunci)</p>
-                      <p className="text-[10px] text-red-500 font-mono">guru.madrasah@gmail.com</p>
-                    </div>
+
+
+                {/* Custom Email Input section inside Google SSO */}
+                <div className="border-t border-slate-100 pt-3.5 mt-2 text-left space-y-2">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-1">Atau Gunakan Akun Email Browser Lain</p>
+                  <div className="flex gap-1.5">
+                    <input
+                      type="email"
+                      required
+                      value={customGoogleEmail}
+                      onChange={(e) => setCustomGoogleEmail(e.target.value)}
+                      placeholder="Contoh: nama@gmail.com"
+                      className="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-205 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-650 outline-none font-medium text-slate-800 bg-slate-50/50"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => selectGoogleAccount(customGoogleEmail)}
+                      className="px-4 py-2 bg-emerald-800 hover:bg-emerald-900 active:scale-98 text-white rounded-xl font-bold text-xs shadow-xs transition flex items-center justify-center cursor-pointer"
+                    >
+                      Masuk
+                    </button>
                   </div>
-                  <span className="text-[8px] bg-red-650 text-white font-bold px-1.5 py-0.5 rounded uppercase tracking-wider scale-95 shrink-0">
-                    Ditolak
-                  </span>
-                </button>
+                </div>
               </div>
 
               {/* Close / Cancel Button */}
